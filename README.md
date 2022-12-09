@@ -1,6 +1,4 @@
-# Cairo-ecs
-
-(From our Lord and Saviour ChatGPT 🙏)
+# Cairo ECS
 
 ## What's an Entity-Component-System (ECS)?
 
@@ -10,7 +8,7 @@ In an ECS system, entities are the objects that exist in the game or application
 
 ECS systems are known for their flexibility and scalability, which makes them well-suited for large, complex projects.
 
-### High Level Princibles of an ECS
+### High level princibles of an ECS
 
 - Entities are defined by their components, not their behavior
 - Components should be small and focused
@@ -20,11 +18,19 @@ ECS systems are known for their flexibility and scalability, which makes them we
 
 # Why put an ECS on-chain?
 
-The benefits of using an entity component system (ECS) in a blockchain application are mainly related to improved flexibility, and composability.
+The benefits of using an entity component system (ECS) in a blockchain application are mainly related to improved flexibility and composability.
 
-ECS is a design pattern that is often used in the development of video games, but it can also be applied to other types of software, including blockchain applications. In an ECS, entities (e.g., objects or characters in a game) are represented as collections of components (e.g., data or behavior) that can be added, removed, or modified independently of each other. This allows developers to easily create and manage complex systems by combining simple, modular components in various ways.
+Using ECS can help improve flexibility by allowing developers to easily add, remove, or modify the data and behavior of entities without having to make changes to the underlying blockchain infrastructure. This makes it easier to adapt the application to changing requirements or to integrate new features over time.
 
-In the context of a blockchain application, using ECS can help improve flexibility by allowing developers to easily add, remove, or modify the data and behavior of entities without having to make changes to the underlying blockchain infrastructure. This makes it easier to adapt the application to changing requirements or to integrate new features over time.
+Additionally, ECS can help improve composability by allowing developers to distribute the data and behavior of entities across different worlds and applications.
+
+# But why do we REALLY care about putting stuff on-chain anyways?
+
+Blockchain's characteristics lie in composability and [hardness](https://stark.mirror.xyz/n2UpRqwdf7yjuiPKVICPpGoUNeDhlWxGqjulrlpyYi0). Stuff put on-chain can be reused permissionlessly, anything running or stored has to obey clearly defined rules. This means we can write completely novel types of apps: not only games but entire _worlds_ with their rulesets and physics. Blockchains allow a whole new range of affordances never leveraged before (see Gubsheep's [on-chain gaming thesis](https://gubsheep.substack.com/p/the-strongest-crypto-gaming-thesis) and aaaaaaa's [thoughts on on-chain gaming](https://dialectic.ch/editorial/thoughts-on-chain-gaming)).
+
+An ECS is an abstraction that allows us to build up composable worlds easily and truly leverage what the blockchain can do. Build their own world, interact with others, negotiate metaphysics, and endlessly recompose.
+
+It's a permissionless, infinite sandbox that never runs out of sand.
 
 # Are there any on-chain ECS?
 
@@ -52,7 +58,6 @@ Since StarkNet has a lot of gaming projects, let's see if we can build an ECS sy
 - [ ] Initial Architecture in Cairo as a POC
 - [ ] Cairo 1 implementation potentially mirroring [Bevy Engine](https://bevyengine.org/) design patterns, leveraging Cairo 1 Rust-esk patterns
 - [ ] A DOJO - A self contained on-chain game enviroment for fast iterations and testings. Create and destroy quickly
-- [ ]
 
 # Resources
 
