@@ -28,7 +28,7 @@ Additionally, ECS can help improve composability by allowing developers to distr
 
 Blockchain's characteristics lie in composability and [hardness](https://stark.mirror.xyz/n2UpRqwdf7yjuiPKVICPpGoUNeDhlWxGqjulrlpyYi0). Stuff put on-chain can be reused permissionlessly, anything running or stored has to obey clearly defined rules. This means we can write completely novel types of apps: not only games but entire _worlds_ with their rulesets and physics. Blockchains allow a whole new range of affordances never leveraged before (see Gubsheep's [on-chain gaming thesis](https://gubsheep.substack.com/p/the-strongest-crypto-gaming-thesis) and aaaaaaa's [thoughts on on-chain gaming](https://dialectic.ch/editorial/thoughts-on-chain-gaming)).
 
-An ECS is an abstraction that allows us to build up composable worlds easily and truly leverage what the blockchain can do. Build their own world, interact with others, negotiate metaphysics, and endlessly recompose.
+An ECS is an abstraction that allows us to build up composable worlds easily and truly leverage what the blockchain can do. Build your own world, interact with others, negotiate metaphysics, and endlessly recompose.
 
 It's a permissionless, infinite sandbox that never runs out of sand.
 
