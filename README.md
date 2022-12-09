@@ -21,8 +21,6 @@ Additionally, ECS can help improve scalability by allowing developers to distrib
 
 Overall, the use of ECS in a blockchain application can help improve flexibility, scalability, and composability, making it a useful design pattern to consider in the development of such applications.
 
-
-
 # Are there any ECS on-chain?
 
 The chads at [Lattice.xyz](https://lattice.xyz/) have built an ECS in Solidity called [MUD](https://mud.dev/).
@@ -42,6 +40,7 @@ Since Starknet has a lot of gaming projects, let's see if we can build an ECS sy
 
 # Work so far
 - [x] loaf's initial thoughts & design
+<img width="1864" alt="ECS" src="https://user-images.githubusercontent.com/43751434/206679784-2efcd2f0-2591-4fda-b26b-b78b067dc8e1.png">
 
 # Resources
 * [What's an ECS?](https://github.com/SanderMertens/ecs-faq)
