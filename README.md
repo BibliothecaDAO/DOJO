@@ -20,13 +20,11 @@ ECS systems are known for their flexibility and scalability, which makes them we
 
 # Why put an ECS on-chain?
 
-The benefits of using an entity component system (ECS) in a blockchain application are mainly related to improved flexibility, scalability and composability.
+The benefits of using an entity component system (ECS) in a blockchain application are mainly related to improved flexibility and composability.
 
-ECS is a design pattern that is often used in the development of video games, but it can also be applied to other types of software, including blockchain applications. In an ECS, entities (e.g., objects or characters in a game) are represented as collections of components (e.g., data or behavior) that can be added, removed, or modified independently of each other. This allows developers to easily create and manage complex systems by combining simple, modular components in various ways.
+Using ECS can help improve flexibility by allowing developers to easily add, remove, or modify the data and behavior of entities without having to make changes to the underlying blockchain infrastructure. This makes it easier to adapt the application to changing requirements or to integrate new features over time.
 
-In the context of a blockchain application, using ECS can help improve flexibility by allowing developers to easily add, remove, or modify the data and behavior of entities without having to make changes to the underlying blockchain infrastructure. This makes it easier to adapt the application to changing requirements or to integrate new features over time.
-
-Additionally, ECS can help improve scalability by allowing developers to distribute the data and behavior of entities across different nodes in the network. This can help reduce the load on any single node, making the system more resilient to large amounts of data or high levels of concurrent access.
+Additionally, ECS can help improve composability  by allowing developers to distribute the data and behavior of entities across different worlds and applications.
 
 # Are there any on-chain ECS?
 
