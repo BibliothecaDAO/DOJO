@@ -53,8 +53,8 @@ Since StarkNet has a lot of gaming projects, let's see if we can build an ECS sy
 # Work so far
 
 - [x] loaf's initial thoughts & design
-- [] Initial Architecture in Cairo as a POC
-- [] Cairo 1 Implementation
+- [ ] Initial Architecture in Cairo as a POC
+- [ ] Cairo 1 Implementation
 
 # Resources
 
