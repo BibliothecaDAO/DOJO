@@ -10,7 +10,7 @@ In an ECS system, entities are the objects that exist in the game or application
 
 ECS systems are known for their flexibility and scalability, which makes them well-suited for large, complex projects.
 
-### High Level Princibles of an ECS
+### High Level Principles of an ECS
 
 - Entities are defined by their components, not their behavior
 - Components should be small and focused
