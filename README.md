@@ -2,7 +2,7 @@
 
 (From our Lord and Saviour ChatGPT 🙏)
 
-# What's an Entity-Component-System (ECS)?
+## What's an Entity-Component-System (ECS)?
 
 An ECS system is a way of organizing and managing the architecture of a game or application. ECS stands for "_Entity-Component-System_", and it is a design pattern that is often used in game development to create reusable and modular code.
 
@@ -28,7 +28,7 @@ In the context of a blockchain application, using ECS can help improve flexibili
 
 Additionally, ECS can help improve scalability by allowing developers to distribute the data and behavior of entities across different nodes in the network. This can help reduce the load on any single node, making the system more resilient to large amounts of data or high levels of concurrent access.
 
-# Are there any ECS on-chain?
+# Are there any on-chain ECS?
 
 The chads at [Lattice.xyz](https://lattice.xyz/) have built an ECS in Solidity called [MUD](https://mud.dev/).
 
@@ -40,16 +40,21 @@ Videos
 
 Since StarkNet has a lot of gaming projects, let's see if we can build an ECS system in Cairo.
 
+![ecs](/ECS.png)
+
 # Overall roadmap
 
 - Wait for cairo 1.0 to be released to actually start coding everything but jam about designs as fast as possible on current Cairo version
 - We need an easy way to spin up permissioned devnets to actually test out composability. We build on top of Shard Lab's https://github.com/Shard-Labs/starknet-devnet
-- Need an indexing system to stream events, we'll use Ceccon's Apibara https://www.apibara.com/
+- Need an indexing system to stream events, we'll use Ceccon's Apibara https://www.apibara.com/. Repo for devnet + apibara here: https://gist.github.com/fracek/a087ebf776aaa29aa40717abd259a084
 - See if we can integrate Jun's work on DIP (Full-Rust Web3 application toolkit focus on, ECS based event-driven development): https://github.com/diptools/dip
+- After all is said and built we'll need ECS to run on application-specific rollups or L3s. Slush is an excellent candidate: https://github.com/slushsdk/slush/releases/tag/v0.2.0
 
 # Work so far
 
 - [x] loaf's initial thoughts & design
+- [] Initial Architecture in Cairo as a POC
+- [] Cairo 1 Implementation
 
 # Resources
 
