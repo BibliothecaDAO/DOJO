@@ -23,8 +23,15 @@ ECS systems are known for their flexibility and scalability, which makes them we
 The benefits of using an entity component system (ECS) in a blockchain application are mainly related to improved flexibility and composability.
 
 Using ECS can help improve flexibility by allowing developers to easily add, remove, or modify the data and behavior of entities without having to make changes to the underlying blockchain infrastructure. This makes it easier to adapt the application to changing requirements or to integrate new features over time.
-
 Additionally, ECS can help improve composability  by allowing developers to distribute the data and behavior of entities across different worlds and applications.
+
+# But why do we REALLY care about putting stuff on-chain anyways?
+
+Blockchain's characteristics lie in composability and [hardness](https://stark.mirror.xyz/n2UpRqwdf7yjuiPKVICPpGoUNeDhlWxGqjulrlpyYi0). Stuff put on the blockchain can be reused permissionlessly, and anything running or stored on the blockchain has to obey clearly defined rules. This means we can write completely novel types of stuff: not only games but entire _worlds_ with their rulesets and physics. Blockchains allow a whole new range of affordances (see Guhsheep's [on-chain gaming thesis](https://gubsheep.substack.com/p/the-strongest-crypto-gaming-thesis) and aaaaaaa's [thoughts on on-chain gaming](https://dialectic.ch/editorial/thoughts-on-chain-gaming)).
+
+If we are to really leverage blockchain's native capabilities of hardness and composability, ECS are a good starting point.
+Everyone can build their own world, using ECS, and interact with other worlds, negociate physics rules, and endlessly recompose.
+It's a great playground for exploration.
 
 # Are there any on-chain ECS?
 
