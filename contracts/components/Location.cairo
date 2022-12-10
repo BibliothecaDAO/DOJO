@@ -1,12 +1,10 @@
 %lang starknet
 
 from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-from contracts.interfaces.IWorld import IComponent as IWorld
-
+from contracts.interfaces.IWorld import IWorld
 from contracts.utils.Utils import Utils
-
 from contracts.components.library import ComponentLibrary
 
 // Questions:
@@ -27,7 +25,9 @@ func component(entity: felt) -> (data: ComponentStruct) {
 }
 
 @constructor
-func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(world_address: felt) {
+func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    world_address: felt
+) {
     ComponentLibrary.set_world_address(world_address);
     return ();
 }
@@ -35,7 +35,7 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 @external
 func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     entity: felt, data_len: felt, data: felt*
-) { 
+) {
     // authorize
 
     // cast data to struct so we can store it
@@ -44,7 +44,7 @@ func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 
     // Get world addr
     let (world_address) = ComponentLibrary.get_world_address();
-    
+
     // call World with state update to trigger event
     IWorld.registerComponentValueSet(entity, ID, data_len, data);
     return ();

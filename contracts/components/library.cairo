@@ -3,12 +3,9 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 
-
 @storage_var
 func world_address() -> (address: felt) {
 }
-
-
 
 namespace ComponentLibrary {
     // set world
@@ -19,15 +16,10 @@ namespace ComponentLibrary {
         return ();
     }
 
-    func set_component_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        entity: felt, data: felt*
-    ) {
-        component.write(value, data);
-        return ();
-    }
-
     // get world
-    func get_world_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}()->(address: felt) {
+    func get_world_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
+        address: felt
+    ) {
         return world_address.read();
     }
 }

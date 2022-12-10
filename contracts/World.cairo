@@ -43,4 +43,3 @@ func registerComponentValueSet{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, r
 
     return ();
 }
-

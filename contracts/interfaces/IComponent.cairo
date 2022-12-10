@@ -4,6 +4,6 @@
 
 @contract_interface
 namespace IComponent {
-    func set(id: felt, data: felt) {
+    func set(id: felt, data_len: felt, data: felt*) {
     }
 }
