@@ -3,6 +3,10 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 
+from contracts.systems.RegisterSystem import RegisterSystem
+
+from contracts.constants.Constants import RegisterType
+
 // emitted on every value change
 @event
 func ComponentValueSet(entity: felt, component_id: felt, data_len: felt, data: felt*) {
@@ -20,6 +24,7 @@ func registerComponent{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     componentAddr: felt, id: felt
 ) {
     // register
+    RegisterSystem.register(RegisterType.Component, componentAddr, id);
     return ();
 }
 
@@ -28,12 +33,13 @@ func registerSystem{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     systemAddr: felt, id: felt
 ) {
     // register
+    RegisterSystem.register(RegisterType.System, systemAddr, id);
     return ();
 }
 
 @external
 func registerComponentValueSet{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    entity: felt, component: felt, data_len: felt*, data: felt*
+    entity: felt, component: felt, data_len: felt, data: felt*
 ) {
     // emit event of changed data
     // sets component value

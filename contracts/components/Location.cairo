@@ -36,16 +36,19 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     entity: felt, data_len: felt, data: felt*
 ) {
+    alloc_locals;
     // authorize
 
     // cast data to struct so we can store it
     // TODO: CAST FUNCTION HERE - we need to cast the data to the struct
-    component.write(entity, ComponentStruct);
+    component.write(entity, ComponentStruct(1, 2));
 
     // Get world addr
     let (world_address) = ComponentLibrary.get_world_address();
 
     // call World with state update to trigger event
-    IWorld.registerComponentValueSet(entity, ID, data_len, data);
+    let (world_address) = ComponentLibrary.get_world_address();
+    IWorld.registerComponentValueSet(world_address, entity, ID, data_len, data);
+
     return ();
 }
