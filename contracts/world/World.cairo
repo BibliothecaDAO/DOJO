@@ -20,7 +20,7 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }
 
 @external
-func registerComponent{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func register_component{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     componentAddr: felt, id: felt
 ) {
     // register
@@ -29,7 +29,7 @@ func registerComponent{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 }
 
 @external
-func registerSystem{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func register_system{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     systemAddr: felt, id: felt
 ) {
     // register
@@ -38,7 +38,7 @@ func registerSystem{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 }
 
 @external
-func registerComponentValueSet{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func register_component_value_set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     entity: felt, component: felt, data_len: felt, data: felt*
 ) {
     // emit event of changed data
@@ -48,4 +48,12 @@ func registerComponentValueSet{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, r
     ComponentValueSet.emit(entity, component, data_len, data);
 
     return ();
+}
+
+@external
+func get_address_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    id: felt
+) -> (address: felt) {
+    // register
+    return RegisterSystem.get_by_id(RegisterType.Component, id);
 }

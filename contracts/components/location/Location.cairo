@@ -3,15 +3,13 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-from contracts.interfaces.IWorld import IWorld
 from contracts.utils.Utils import Utils
-from contracts.components.library import ComponentLibrary
 
-// Questions:
-// Should have have type system at the component level. We can have a view function that fetches the type so clients know what the component accepts.
-// How should we pack the values? Do we come up with generic bitmapping system?
+from contracts.world.IWorld import IWorld
+from contracts.world.Library import World
 
-const ID = 'example.component.Location';
+// import ID
+from contracts.components.location.Constants import ID
 
 // we use generic name at the component level, so we can reuse functions at the system level
 // Position
@@ -28,7 +26,7 @@ func component(entity: felt) -> (data: ComponentStruct) {
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     world_address: felt
 ) {
-    ComponentLibrary.set_world_address(world_address);
+    World.set_world_address(world_address);
     return ();
 }
 
@@ -44,11 +42,19 @@ func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     component.write(entity, ComponentStruct(1, 2));
 
     // Get world addr
-    let (world_address) = ComponentLibrary.get_world_address();
+    let (world_address) = World.get_world_address();
 
     // call World with state update to trigger event
-    let (world_address) = ComponentLibrary.get_world_address();
-    IWorld.registerComponentValueSet(world_address, entity, ID, data_len, data);
+    let (world_address) = World.get_world_address();
+    IWorld.register_component_value_set(world_address, entity, ID, data_len, data);
 
     return ();
+}
+
+// get Schema for component
+@external
+func get_schema{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
+    schema: ComponentStruct
+) {
+    return (schema=ComponentStruct(1, 2));
 }

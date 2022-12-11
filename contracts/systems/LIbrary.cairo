@@ -21,7 +21,7 @@ func setByAddress(register_type: felt, address: felt) -> (id: felt) {
 func owner(register_type: felt, id: felt) -> (address: felt) {
 }
 
-namespace RegisterSystem {
+namespace System {
     func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         register_type: felt, address: felt, id: felt
     ) {
@@ -38,13 +38,13 @@ namespace RegisterSystem {
 
     func get_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         register_type: felt, id: felt
-    ) -> (address: felt) {
+    ) {
         return setById.read(register_type, id);
     }
 
     func get_by_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         register_type: felt, address: felt
-    ) -> (id: felt) {
+    ) {
         return setByAddress.read(register_type, address);
     }
 }
