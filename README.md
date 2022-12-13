@@ -1,5 +1,12 @@
 # Cairo ECS
 
+Create StarkNet env then
+
+```
+source ~/cairo_venv/bin/activate
+
+```
+
 ## What's an Entity-Component-System (ECS)?
 
 An ECS system is a way of organizing and managing the architecture of a game or application. ECS stands for "_Entity-Component-System_", and it is a design pattern that is often used in game development to create reusable and modular code.

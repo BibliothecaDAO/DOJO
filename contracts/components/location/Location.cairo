@@ -41,9 +41,6 @@ func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     // TODO: CAST FUNCTION HERE - we need to cast the data to the struct
     component.write(entity, ComponentStruct(1, 2));
 
-    // Get world addr
-    let (world_address) = World.get_world_address();
-
     // call World with state update to trigger event
     let (world_address) = World.get_world_address();
     IWorld.register_component_value_set(world_address, entity, ID, data_len, data);

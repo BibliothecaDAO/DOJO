@@ -20,19 +20,15 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     return ();
 }
 
-// single function that executes the move system
+// single function
 @external
 func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     entity: felt, data_len: felt, data: felt*
 ) {
     alloc_locals;
-    // AUTH Check caller can execute
 
-    // get component address from World registry
-    let (world_address) = World.get_world_address();
-    let (component_address) = IWorld.get_address_by_id(world_address, LocationID);
-
-    // set data
-    ILocation.set(component_address, entity, data_len, data);
+    // add entities to the World
+    // add component values which the entity has
+    // store in lookup table to query what components the entity has
     return ();
 }
