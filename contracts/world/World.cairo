@@ -5,7 +5,7 @@ from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 
 from contracts.systems.RegisterSystem import RegisterSystem
 
-from contracts.constants.Constants import RegisterType
+from contracts.constants.Constants import ECS_ID
 
 // __WORLD__
 // This contract is the world. It is the center of the on-chain world.
@@ -17,6 +17,14 @@ from contracts.constants.Constants import RegisterType
 // It doesn't store any component state.
 
 // It emits events for the whole world when components are changed.
+
+// __CURRENT DESIGN__
+// All Systems, Components, and Entities are registered in the world in the RegisterSystem
+// Everything in the World is an entity and is structured as an Archetype for easy querying
+// Every entity has a unique ID
+// Every entity has a set of components which is defined by it's Archetype
+// Archetypes are defined by the components they have
+// Archetypes are bitmaps of component IDs
 
 // TOOD:
 // Figure out query system for efficient querying of entities and their components. This is how we tick all systems that are interested in correct entites.
@@ -39,19 +47,19 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 
 @external
 func register_component{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    componentAddr: felt, id: felt
+    address: felt, id: felt
 ) {
     // register
-    RegisterSystem.register(RegisterType.Component, componentAddr, id);
+    RegisterSystem.register(address, ECS_ID.COMPONENT);
     return ();
 }
 
 @external
 func register_system{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    systemAddr: felt, id: felt
+    address: felt, id: felt
 ) {
     // register
-    RegisterSystem.register(RegisterType.System, systemAddr, id);
+    RegisterSystem.register(address, ECS_ID.SYSTEM);
     return ();
 }
 
@@ -70,34 +78,26 @@ func register_component_value_set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*
     return ();
 }
 
-@view
-func get_address_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    id: felt
-) -> (address: felt) {
-    // register
-    return RegisterSystem.get_by_id(RegisterType.Component, id);
-}
+// @view
+// func components_of_entity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     entity: felt
+// ) -> (components_len: felt, components: felt*) {
+//     // register
+//     // query ID
+//     // query components and check entity has value -> we should store entities components in a map in world
+//     // return all components that the entity has
 
-@view
-func components_of_entity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    entity: felt
-) -> (components_len: felt, components: felt*) {
-    // register
-    // query ID
-    // query components and check entity has value -> we should store entities components in a map in world
-    // return all components that the entity has
+// // IDEAS:
+//     // hibitset to store IDs of components associatd with an Entity
+//     return ();
+// }
 
-    // IDEAS:
-    // hibitset to store IDs of components associatd with an Entity
-    return ();
-}
+// @external
+// func set_entity_ids{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     entity: felt
+// ) -> (components_len: felt, components: felt*) {
+//     // entity ID counter
+//     // components call this function to check that ID is valid
 
-@external
-func set_entity_ids{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    entity: felt
-) -> (components_len: felt, components: felt*) {
-    // entity ID counter
-    // components call this function to check that ID is valid
-
-    return ();
-}
+// return ();
+// }
