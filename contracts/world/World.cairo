@@ -20,7 +20,10 @@ from contracts.constants.Constants import RegisterType
 
 // TOOD:
 // Figure out query system for efficient querying of entities and their components. This is how we tick all systems that are interested in correct entites.
-// Archetypes are a way to group entities together based on their components.
+
+// GLOBAL Questions:
+// Should Entities all be NFTs
+// How do we destroy enemies from the Mapping without Arrays
 
 // emitted on every value change
 @event
