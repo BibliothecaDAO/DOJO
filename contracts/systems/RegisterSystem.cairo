@@ -57,6 +57,7 @@ namespace RegisterSystem {
     func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         address: felt, archetype: felt
     ) {
+        alloc_locals;
         // TODO: Stop overriding unless owner
 
         // check archetype is registered

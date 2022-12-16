@@ -22,7 +22,7 @@ from contracts.constants.Constants import ECS_ID
 // All Systems, Components, and Entities are registered in the world in the RegisterSystem
 // Everything in the World is an entity and is structured as an Archetype for easy querying
 // Every entity has a unique ID
-// Every entity has a set of components which is defined by it's Archetype
+// Every entity has a set of components which is defined by its Archetype
 // Archetypes are defined by the components they have
 // Archetypes are bitmaps of component IDs
 
