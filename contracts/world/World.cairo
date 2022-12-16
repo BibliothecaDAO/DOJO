@@ -74,7 +74,6 @@ func register_component_value_set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*
     ComponentValueSet.emit(entity, component, data_len, data);
 
     // set entity has component in mapping -> this will allow querying all components of an entity
-
     return ();
 }
 

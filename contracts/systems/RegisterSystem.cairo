@@ -6,8 +6,6 @@ from starkware.starknet.common.syscalls import get_caller_address
 
 from contracts.constants.Constants import Entity
 
-// Vectors are bitmaps of component IDs
-
 // __Concepts__
 // Archetypes are bitmapped values of component IDs and can be used to check if an entity has a component
 // this means we can add entities to entities
@@ -16,6 +14,10 @@ from contracts.constants.Constants import Entity
 // - check if archetype is already registered
 // - check if entity is already registered
 // - check if entity is owned by caller
+// - update archetype of entity without rewriting entity
+// - emit events
+// - pluck all archetypes into an Array
+// - should archetypes be optional
 
 // entity index
 @storage_var
@@ -147,14 +149,14 @@ namespace RegisterSystem {
 
     // resgister archetype
     func register_archetype{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        archetype: felt
+        _archetype: felt
     ) {
         // check archetype is not already registered
         // TODO: Auth
-        let registered = is_archetype_registered(archetype);
+        let registered = is_archetype_registered(_archetype);
         assert registered = 0;
 
-        archetype.write(archetype, 1);
+        archetype.write(_archetype, 1);
 
         return ();
     }
