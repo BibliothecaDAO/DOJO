@@ -2,101 +2,105 @@
 
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
+from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.systems.RegisterSystem import RegisterSystem
 
 from contracts.constants.Constants import ECS_ID
 
-// __WORLD__
-// This contract is the world. It is the center of the on-chain world.
-// It stores all entitiy IDs
-// It stores all systems.
-// It stores all archetypes.
+from contracts.utils.ISystem import ISystem
 
-// It doesn't store any system logic.
-// It doesn't store any component state.
+// WORLD ------------
+// The World is the entry point for all components and systems. You need to register your component or system
+// with the world before you can use it. The world is responsible for calling the systems and passing the data
+// to them.
+// Systems, Components and Etnities all exist in the same table. They are differentiated by their Archetype.
+// ------------------
 
-// It emits events for the whole world when components are changed.
+//
+// EVENTS ------------
+//
 
-// __CURRENT DESIGN__
-// All Systems, Components, and Entities are registered in the world in the RegisterSystem
-// Everything in the World is an entity and is structured as an Archetype for easy querying
-// Every entity has a unique ID
-// Every entity has a set of components which is defined by its Archetype
-// Archetypes are defined by the components they have
-// Archetypes are bitmaps of component IDs
-
-// TOOD:
-// Figure out query system for efficient querying of entities and their components. This is how we tick all systems that are interested in correct entites.
-
-// GLOBAL Questions:
-// Should Entities all be NFTs
-// How do we destroy enemies from the Mapping without Arrays
-
-// emitted on every value change
+// @notice: emitted when a component value is set
+// @param: entity: the entity the component value is set on
+// @param: component_id: the component id
+// @param: data_len: the length of the data
+// @param: data: the data
 @event
 func ComponentValueSet(entity: felt, component_id: felt, data_len: felt, data: felt*) {
 }
 
 @constructor
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
-    // init
-
+    // we setup initial Archetypes here
+    RegisterSystem.register_archetype(ECS_ID.COMPONENT);
+    RegisterSystem.register_archetype(ECS_ID.SYSTEM);
     return ();
 }
 
+//
+// REGISTER ---------------
+
+// @notice: register a component
+// @param: address: the address of the component
 @external
 func register_component{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    address: felt, id: felt
+    address: felt
 ) {
-    // register
     RegisterSystem.register(address, ECS_ID.COMPONENT);
     return ();
 }
 
+// @notice: register a system
+// @param: address: the address of the system
 @external
 func register_system{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    address: felt, id: felt
+    address: felt
 ) {
-    // register
     RegisterSystem.register(address, ECS_ID.SYSTEM);
     return ();
 }
 
+// @notice: register a component value set
+// @param: entity: the entity to set the value on
+// @param: component: the component to set the value on
+// @param: data_len: the length of the data
+// @param: data: the data to set
 @external
 func register_component_value_set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     entity: felt, component: felt, data_len: felt, data: felt*
 ) {
-    // emit event of changed data
-    // sets component value
+    alloc_locals;
+    // TODO: check Component is registered in world
+    // Only can be called by Registered Component
 
-    // get component address
+    RegisterSystem.set(entity);
     ComponentValueSet.emit(entity, component, data_len, data);
-
-    // set entity has component in mapping -> this will allow querying all components of an entity
     return ();
 }
 
-// @view
-// func components_of_entity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-//     entity: felt
-// ) -> (components_len: felt, components: felt*) {
-//     // register
-//     // query ID
-//     // query components and check entity has value -> we should store entities components in a map in world
-//     // return all components that the entity has
+//
+// EXECUTE ------------------------
+// note: No systems are called directly. Everything is called via the World.
+// --------------------------------
 
-// // IDEAS:
-//     // hibitset to store IDs of components associatd with an Entity
-//     return ();
-// }
+// @notice: execute a system
+// @param: system: the system to execute
+// @param: entity: the entity to execute the system on
+// @param: data_len: the length of the data
+// @param: data: the data to pass to the system
+@external
+func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    system: felt, entity: felt, data_len: felt, data: felt*
+) {
+    alloc_locals;
 
-// @external
-// func set_entity_ids{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-//     entity: felt
-// ) -> (components_len: felt, components: felt*) {
-//     // entity ID counter
-//     // components call this function to check that ID is valid
+    // Check System is registered in world. Revert if not.
+    let is_entity = RegisterSystem.is_entity(system);
+    assert is_entity = TRUE;
 
-// return ();
-// }
+    // call Systems via the World
+    // Auth Check on System
+    ISystem.execute(system, entity, data_len, data);
+    return ();
+}

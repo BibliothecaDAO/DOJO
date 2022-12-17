@@ -26,7 +26,8 @@ func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     entity: felt, data_len: felt, data: felt*
 ) {
     alloc_locals;
-    // AUTH Check caller can execute
+    // TODO: Assert Caller is World / Admin / Approved System
+    // World.assert_caller_is_world();
 
     // get component address from World registry
     let (world_address) = World.get_world_address();

@@ -9,6 +9,6 @@ namespace ECS_ID {
 
 // TODO: Maybe this is too much?
 struct Entity {
-    address: felt,
+    ecs_id: felt,  // can be address or ID
     archetype: felt,  // ECS_ID is the first bit - after first we store a vector of component IDS bitmapped
 }
