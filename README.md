@@ -4,7 +4,6 @@ Create StarkNet env then
 
 ```
 source ~/cairo_venv/bin/activate
-
 ```
 
 ## What's an Entity-Component-System (ECS)?

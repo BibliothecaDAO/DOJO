@@ -4,6 +4,10 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
 
+// WORLD LIBRARY------------
+// Import into Systems and Components to init the World.
+// Contains helper Auth functions for the World.
+
 @storage_var
 func world_address() -> (address: felt) {
 }

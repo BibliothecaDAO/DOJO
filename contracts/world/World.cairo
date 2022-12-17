@@ -4,6 +4,8 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
+from contracts.constants.Constants import Entity
+
 from contracts.systems.RegisterSystem import RegisterSystem
 
 from contracts.constants.Constants import ECS_ID
@@ -43,21 +45,23 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 
 // @notice: register a component
 // @param: address: the address of the component
+// @param: guid: the guid of the component
 @external
 func register_component{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    address: felt
+    address: felt, guid: felt
 ) {
-    RegisterSystem.register(address, ECS_ID.COMPONENT);
+    RegisterSystem.register(address, guid, ECS_ID.COMPONENT);
     return ();
 }
 
 // @notice: register a system
 // @param: address: the address of the system
+// @param: guid: the guid of the system
 @external
 func register_system{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    address: felt
+    address: felt, guid: felt
 ) {
-    RegisterSystem.register(address, ECS_ID.SYSTEM);
+    RegisterSystem.register(address, guid, ECS_ID.SYSTEM);
     return ();
 }
 
@@ -74,7 +78,7 @@ func register_component_value_set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*
     // TODO: check Component is registered in world
     // Only can be called by Registered Component
 
-    RegisterSystem.set(entity);
+    RegisterSystem.set(0, entity);
     ComponentValueSet.emit(entity, component, data_len, data);
     return ();
 }
@@ -103,4 +107,20 @@ func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     // Auth Check on System
     ISystem.execute(system, entity, data_len, data);
     return ();
+}
+
+//
+// VIEWS ------------------------
+//
+
+// get address by id
+@view
+func get_address_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    guid: felt
+) -> (address: felt) {
+    let is_entity = RegisterSystem.is_entity(guid);
+    assert is_entity = TRUE;
+
+    let (address: Entity) = RegisterSystem.get_by_id(guid);
+    return (address.ecs_id,);
 }

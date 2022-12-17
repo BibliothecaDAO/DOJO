@@ -64,10 +64,11 @@ func archetype(archetype: felt) -> (registered: felt) {
 
 namespace RegisterSystem {
     // @notice: Registers an entity in the ECS and stores it Archetype
-    // @param: ecs_id - the ID of the entity in the ECS - This can be address or an id
+    // @param: ecs_id - the ID of the entity in the ECS - This is an address
+    // @param: guid - the GUID of the entity
     // @param: archetype - the archetype of the entity
     func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        ecs_id: felt, archetype: felt
+        ecs_id: felt, guid: felt, archetype: felt
     ) {
         alloc_locals;
         // check ID not already registered
@@ -83,17 +84,17 @@ namespace RegisterSystem {
 
         // get Archetype - Archetypes are bitmapped values of component IDs and can be used to check if an entity has a component
         // first bit is type - 0 = entity, 1 = component, 2 = system
-        Storage_guid.write(ecs_id, Entity(ecs_id, archetype));
+        Storage_guid.write(guid, Entity(guid, ecs_id, archetype));
 
         // slightly dirty - as we are doubling up on storage, but once it's in, we save massively on query.
-        Storage_archetype_guid.write(archetype, archetype_id, Entity(ecs_id, archetype));
+        Storage_archetype_guid.write(archetype, archetype_id, Entity(guid, ecs_id, archetype));
 
         // set Auth to Caller
         let (caller_address) = get_caller_address();
         owner.write(ecs_id, caller_address);
 
         // emit register event and ID
-        ECSRegistryUpdate.emit(Entity(ecs_id, archetype), archetype_id, caller_address);
+        ECSRegistryUpdate.emit(Entity(guid, ecs_id, archetype), archetype_id, caller_address);
         return ();
     }
 
@@ -115,9 +116,9 @@ namespace RegisterSystem {
 
     // checks if entity exists
     func is_entity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        ecs_id: felt
+        guid: felt
     ) -> felt {
-        let (entity) = Storage_guid.read(ecs_id);
+        let (entity) = Storage_guid.read(guid);
 
         if (entity.ecs_id == 0) {
             return 0;
@@ -129,15 +130,17 @@ namespace RegisterSystem {
     // checks if entity exists
     //  if not, creates it
     //  if so, returns it
-    func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(ecs_id: felt) {
-        let entity = is_entity(ecs_id);
+    func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        ecs_id: felt, guid: felt
+    ) {
+        let entity = is_entity(guid);
 
         // TODO: Come up with way to check Archetypes and pop and or add
         // V1 has none
 
         if (entity == FALSE) {
             // register
-            register(ecs_id, 0);
+            register(ecs_id, guid, 0);
             return ();
         }
 

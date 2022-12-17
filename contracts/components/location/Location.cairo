@@ -2,6 +2,7 @@
 
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.starknet.common.syscalls import get_contract_address
 
 from contracts.utils.Utils import Utils
 
@@ -30,12 +31,24 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     return ();
 }
 
+// Set up the component within the World.
+// TODO: Component cannot be called until registered
+@external
+func init{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    // only owner can call this
+    let (world_address) = World.get_world_address();
+    let (contract_address) = get_contract_address();
+    IWorld.register_component(world_address, contract_address, ID);
+    return ();
+}
+
 @external
 func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     entity: felt, data_len: felt, data: felt*
 ) {
     alloc_locals;
     // authorize
+    // check init
 
     // cast data to struct so we can store it
     // TODO: CAST FUNCTION HERE - we need to cast the data to the struct
