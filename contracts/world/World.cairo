@@ -8,14 +8,14 @@ from contracts.constants.Constants import Entity
 
 from contracts.systems.RegisterSystem import RegisterSystem
 
-from contracts.constants.Constants import ECS_ID
+from contracts.constants.Constants import ECS_TYPE
 
 from contracts.utils.ISystem import ISystem
 
 // WORLD ------------
 // The World is the entry point for all components and systems. You need to register your component or system
 // with the world before you can use it. The world is responsible for calling the systems and passing the data
-// to them.
+// to them. Systems and Components are registered via calls on their contracts.
 // Systems, Components and Etnities all exist in the same table. They are differentiated by their Archetype.
 // ------------------
 
@@ -35,33 +35,24 @@ func ComponentValueSet(entity: felt, component_id: felt, data_len: felt, data: f
 @constructor
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
     // we setup initial Archetypes here
-    RegisterSystem.register_archetype(ECS_ID.COMPONENT);
-    RegisterSystem.register_archetype(ECS_ID.SYSTEM);
+    RegisterSystem.register_archetype(ECS_TYPE.COMPONENT);
+    RegisterSystem.register_archetype(ECS_TYPE.SYSTEM);
     return ();
 }
 
 //
 // REGISTER ---------------
+//
 
-// @notice: register a component
-// @param: address: the address of the component
-// @param: guid: the guid of the component
+// @notice: General register function. This is called by the component or system to register itself with the world.
+// @param: ecs_address: the address of the entity
+// @param: guid: the guid of the component - This can be a String or a Hash
+// @param: ecs_type: the type of the entity
 @external
-func register_component{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    address: felt, guid: felt
+func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    ecs_address: felt, guid: felt, ecs_type: felt
 ) {
-    RegisterSystem.register(address, guid, ECS_ID.COMPONENT);
-    return ();
-}
-
-// @notice: register a system
-// @param: address: the address of the system
-// @param: guid: the guid of the system
-@external
-func register_system{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    address: felt, guid: felt
-) {
-    RegisterSystem.register(address, guid, ECS_ID.SYSTEM);
+    RegisterSystem.register(ecs_address, guid, ecs_type);
     return ();
 }
 
@@ -72,40 +63,43 @@ func register_system{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
 // @param: data: the data to set
 @external
 func register_component_value_set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    entity: felt, component: felt, data_len: felt, data: felt*
+    entity_guid: felt, component: felt, data_len: felt, data: felt*
 ) {
     alloc_locals;
     // TODO: check Component is registered in world
     // Only can be called by Registered Component
 
-    RegisterSystem.set(0, entity);
-    ComponentValueSet.emit(entity, component, data_len, data);
+    // set 0 here for now - we could pass an address in the future to set an address for the entity
+    RegisterSystem.set(0, entity_guid);
+    ComponentValueSet.emit(entity_guid, component, data_len, data);
     return ();
 }
 
 //
 // EXECUTE ------------------------
 // note: No systems are called directly. Everything is called via the World.
-// --------------------------------
+//
 
-// @notice: execute a system
-// @param: system: the system to execute
+// @notice: execute a system. We use the system_guid to get the address of the system and then call it. This saves the client having to map addresses. They just register the guid.
+// @param: system_guid: the guid of the system entity.
 // @param: entity: the entity to execute the system on
 // @param: data_len: the length of the data
 // @param: data: the data to pass to the system
 @external
 func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    system: felt, entity: felt, data_len: felt, data: felt*
+    system_guid: felt, entity: felt, data_len: felt, data: felt*
 ) {
     alloc_locals;
 
     // Check System is registered in world. Revert if not.
-    let is_entity = RegisterSystem.is_entity(system);
+    let is_entity = RegisterSystem.is_entity(system_guid);
     assert is_entity = TRUE;
+
+    let (system_address) = get_address_by_id(system_guid);
 
     // call Systems via the World
     // Auth Check on System
-    ISystem.execute(system, entity, data_len, data);
+    ISystem.execute(system_address, entity, data_len, data);
     return ();
 }
 
@@ -121,6 +115,6 @@ func get_address_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     let is_entity = RegisterSystem.is_entity(guid);
     assert is_entity = TRUE;
 
-    let (address: Entity) = RegisterSystem.get_by_id(guid);
-    return (address.ecs_id,);
+    let (entity: Entity) = RegisterSystem.get_by_id(guid);
+    return (entity.ecs_address,);
 }

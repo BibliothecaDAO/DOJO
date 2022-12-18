@@ -3,14 +3,17 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
+from contracts.constants.Constants import ECS_TYPE
+
 // import component
 from contracts.components.IComponent import IComponent as ILocation
+from contracts.components.location.Constants import ID as LocationID
 
 from contracts.world.Library import World
-
 from contracts.world.IWorld import IWorld
 
-from contracts.components.location.Constants import ID as LocationID
+// System specific imports
+from contracts.systems.Constants import ID
 
 @constructor
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -35,5 +38,14 @@ func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 
     // set data
     ILocation.set(component_address, entity, data_len, data);
+    return ();
+}
+
+// Set up the system within the World.
+// TODO: System cannot be called until this is setup
+@external
+func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    // Set Component in World
+    World.register(ID, ECS_TYPE.SYSTEM);
     return ();
 }

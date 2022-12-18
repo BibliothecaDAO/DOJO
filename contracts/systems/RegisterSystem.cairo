@@ -8,7 +8,7 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from contracts.constants.Constants import Entity
 
 // __Concepts__
-// ecs_id: The ID of the entity in the ECS - This can be address or an id
+// ecs_address: The ID of the entity in the ECS - This can be address or an id
 // archetype: The archetype of the entity
 // archetype_id: The ID of the entity in the archetype
 
@@ -64,11 +64,11 @@ func archetype(archetype: felt) -> (registered: felt) {
 
 namespace RegisterSystem {
     // @notice: Registers an entity in the ECS and stores it Archetype
-    // @param: ecs_id - the ID of the entity in the ECS - This is an address
+    // @param: ecs_address - the ID of the entity in the ECS - This is an address
     // @param: guid - the GUID of the entity
     // @param: archetype - the archetype of the entity
     func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        ecs_id: felt, guid: felt, archetype: felt
+        ecs_address: felt, guid: felt, archetype: felt
     ) {
         alloc_locals;
         // check ID not already registered
@@ -84,17 +84,17 @@ namespace RegisterSystem {
 
         // get Archetype - Archetypes are bitmapped values of component IDs and can be used to check if an entity has a component
         // first bit is type - 0 = entity, 1 = component, 2 = system
-        Storage_guid.write(guid, Entity(guid, ecs_id, archetype));
+        Storage_guid.write(guid, Entity(guid, ecs_address, archetype));
 
         // slightly dirty - as we are doubling up on storage, but once it's in, we save massively on query.
-        Storage_archetype_guid.write(archetype, archetype_id, Entity(guid, ecs_id, archetype));
+        Storage_archetype_guid.write(archetype, archetype_id, Entity(guid, ecs_address, archetype));
 
         // set Auth to Caller
         let (caller_address) = get_caller_address();
-        owner.write(ecs_id, caller_address);
+        owner.write(guid, caller_address);
 
         // emit register event and ID
-        ECSRegistryUpdate.emit(Entity(guid, ecs_id, archetype), archetype_id, caller_address);
+        ECSRegistryUpdate.emit(Entity(guid, ecs_address, archetype), archetype_id, caller_address);
         return ();
     }
 
@@ -103,11 +103,11 @@ namespace RegisterSystem {
     // --------------------------------
 
     // @notice: Gets the Archetype ID of an entity
-    // @param: ecs_id - the ID of the entity in the ECS - This can be address or an id
-    func get_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        ecs_id: felt
-    ) -> (entity: Entity) {
-        return Storage_guid.read(ecs_id);
+    // @param: ecs_address - the ID of the entity in the ECS - This can be address or an id
+    func get_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(guid: felt) -> (
+        entity: Entity
+    ) {
+        return Storage_guid.read(guid);
     }
 
     // --------------------------------
@@ -120,7 +120,7 @@ namespace RegisterSystem {
     ) -> felt {
         let (entity) = Storage_guid.read(guid);
 
-        if (entity.ecs_id == 0) {
+        if (entity.ecs_address == 0) {
             return 0;
         }
 
@@ -131,7 +131,7 @@ namespace RegisterSystem {
     //  if not, creates it
     //  if so, returns it
     func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        ecs_id: felt, guid: felt
+        ecs_address: felt, guid: felt
     ) {
         let entity = is_entity(guid);
 
@@ -140,7 +140,7 @@ namespace RegisterSystem {
 
         if (entity == FALSE) {
             // register
-            register(ecs_id, guid, 0);
+            register(ecs_address, guid, 0);
             return ();
         }
 

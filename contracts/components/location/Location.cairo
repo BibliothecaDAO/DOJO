@@ -4,6 +4,8 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.starknet.common.syscalls import get_contract_address
 
+from contracts.constants.Constants import ECS_TYPE
+
 from contracts.utils.Utils import Utils
 
 from contracts.world.IWorld import IWorld
@@ -34,11 +36,9 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 // Set up the component within the World.
 // TODO: Component cannot be called until registered
 @external
-func init{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
-    // only owner can call this
-    let (world_address) = World.get_world_address();
-    let (contract_address) = get_contract_address();
-    IWorld.register_component(world_address, contract_address, ID);
+func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    // Set Component in World
+    World.register(ID, ECS_TYPE.COMPONENT);
     return ();
 }
 

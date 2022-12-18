@@ -2,9 +2,13 @@
 
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
-from starkware.starknet.common.syscalls import get_caller_address
+from starkware.starknet.common.syscalls import get_caller_address, get_contract_address
 
+from contracts.world.IWorld import IWorld
+
+//
 // WORLD LIBRARY------------
+//
 // Import into Systems and Components to init the World.
 // Contains helper Auth functions for the World.
 
@@ -36,5 +40,15 @@ namespace World {
         assert caller_address = world_address;
 
         return world_address.read();
+    }
+
+    // @notice: register component/system in the world
+    func register{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        guid: felt, ecs_type: felt
+    ) {
+        let (world_address) = get_world_address();
+        let (contract_address) = get_contract_address();
+        IWorld.register(world_address, contract_address, guid, ecs_type);
+        return ();
     }
 }
