@@ -99,6 +99,8 @@ func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 
     // call Systems via the World
     // Auth Check on System
+
+    // ?? Do we pass the caller here - This would allow auth on Systems.
     ISystem.execute(system_address, entity, data_len, data);
     return ();
 }
