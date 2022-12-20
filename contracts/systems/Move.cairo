@@ -71,8 +71,10 @@ func assert_in_map{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     let new_location_y = data[3];
 
     // assert in map
-    let less_than_x = is_le(new_location_x, MAP_SIZE);
-    let less_than_y = is_le(new_location_y, MAP_SIZE);
+    let less_than_x = is_le(MAP_SIZE, new_location_x);
+    let less_than_y = is_le(MAP_SIZE, new_location_y);
+
+    assert less_than_x + less_than_y = 0;
 
     // assert only one step
     let one_step_x = absDiff(old_location_x, new_location_x);
