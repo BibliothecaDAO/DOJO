@@ -51,4 +51,13 @@ namespace World {
         IWorld.register(world_address, contract_address, guid, ecs_type);
         return ();
     }
+
+    func get_address_by_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        id: felt
+    ) -> felt {
+        let (world_address) = get_world_address();
+        let (component_address) = IWorld.get_address_by_id(world_address, id);
+
+        return (component_address);
+    }
 }

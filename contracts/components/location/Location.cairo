@@ -12,14 +12,7 @@ from contracts.world.IWorld import IWorld
 from contracts.world.Library import World
 
 // import ID
-from contracts.components.location.Constants import ID
-
-// we use generic name at the component level, so we can reuse functions at the system level
-// Position
-struct ComponentStruct {
-    x: felt,
-    y: felt,
-}
+from contracts.components.location.Constants import ID, ComponentStruct
 
 @storage_var
 func component(entity: felt) -> (data: ComponentStruct) {
@@ -52,7 +45,11 @@ func set{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 
     // cast data to struct so we can store it
     // TODO: CAST FUNCTION HERE - we need to cast the data to the struct
-    component.write(entity, ComponentStruct(1, 2));
+
+    let x = data[0];
+    let y = data[1];
+
+    component.write(entity, ComponentStruct(x, y));
 
     // call World with state update to trigger event
     let (world_address) = World.get_world_address();
@@ -67,4 +64,12 @@ func get_schema{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}
     schema: ComponentStruct
 ) {
     return (schema=ComponentStruct(1, 2));
+}
+
+// get Schema for component
+@view
+func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(entity: felt) -> (
+    data: ComponentStruct
+) {
+    return component.read(entity);
 }
