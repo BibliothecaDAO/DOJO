@@ -4,14 +4,26 @@ lib-path = "contracts"
 
 [contracts]
 world = ["contracts/world/World.cairo"]
+location_component = ["contracts/components/location/Location.cairo"]
+move_system = ["contracts/systems/Move.cairo"]  
 
 # Shared Configuration Profile
 [profile.devnet.project]
 gateway-url = "http://127.0.0.1:5050/"
 chain-id = 1536727068981429685321
+private-key-path = "./.env"
+account-address=""  
 
 [profile.testnet.project]
-network = "testnet"
+network="testnet"
+private-key-path = "./.env"
+account-address=""
+
+[profile.testnet2.project]
+gateway-url = "https://alpha4-2.starknet.io"
+chain-id = 1536727068981429685321
+private-key-path = "./.env"
+account-address = ""  
 
 [format]
 target = ["contracts", "tests"]
