@@ -1,4 +1,10 @@
-# Cairo ECS
+# Cairo DOJO
+
+A Monorepo containing:
+
+- [x] Cairo ECS System
+- [x] Dockerised Devnet
+- [] Bevy Game client
 
 Create StarkNet env then
 
