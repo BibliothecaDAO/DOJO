@@ -7,6 +7,14 @@
 #   - jq
 #
 
+# takes one or more arguments
+print() {
+	# Echo the arguments to standard error
+	# The ">&2" redirects the output to standard error instead of standard output
+	# The "$*" expands to all the arguments passed to the function
+	echo "$*" >&2
+}
+
 # ensures that a file that keeps track
 # of profile x contract -> address is available
 ensure_deployment_cache() {
@@ -25,14 +33,43 @@ eval_protostar() {
 	cmd=$1
 	key=$2
 
+	print $cmd
 	# Capture the output of the shell command
-	output=$(eval "$cmd")
+	output=$(eval $cmd)
+	exit_status=$?
+
+	if [ $exit_status -ne 0 ]; then
+		print $output
+		exit $exit_status
+	fi
 
 	# Use jq to select the value of the specified key in the output
 	value=$(echo "$output" | jq -r ".$key")
 
 	# Return the value
 	echo "$value"
+}
+
+# subshell calls are necessary to parse json responses of protostar commands,
+# because of usage of subshell calls, we have to check and pass exit statuses to exit the script when a command fails
+deploy_protostar() {
+	contract_name=$1
+	inputs=$2
+
+	class_hash=$(eval_protostar "protostar -p $profile declare \"$build_dir/$contract_name.json\"  --max-fee auto --json" "class_hash")
+	exit_status=$?
+
+	if [ $exit_status -ne 0 ]; then
+		exit $exit_status
+	fi
+
+	deployed_address=$(eval_protostar "protostar -p $profile deploy $class_hash --inputs $inputs --max-fee auto --json" "contract_address")
+	exit_status=$?
+
+	if [ $exit_status -ne 0 ]; then
+		exit $exit_status
+	fi
+
 }
 
 # updates a nested json key path with a given value
@@ -46,15 +83,5 @@ update_json_value() {
 	echo "$contract_name deployed to $profile at $value"
 	# Use jq to update the value of the nested key in the JSON file
 	jq ".$key1.$key2 |= \"$value\"" $dest >$dest.tmp && mv $dest.tmp $dest
-}
-
-deploy_protostar() {
-	contract_name=$1
-	inputs=$2
-
-	class_hash=$(eval_protostar "protostar -p $profile declare \"$build_dir/$contract_name.json\"  --max-fee auto --json" "class_hash")
-	deployed_address=$(eval_protostar "protostar -p $profile deploy $class_hash --inputs $inputs --max-fee auto --json" "contract_address")
-
-	echo "$deployed_address"
 
 }

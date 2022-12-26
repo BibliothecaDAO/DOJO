@@ -28,12 +28,12 @@ if [ "$contract_name" != "world" ]; then
 
 	fi
 
-	deployed_address=$(deploy_protostar $contract_name $deployed_world_address)
+	deploy_protostar $contract_name $deployed_world_address
 	update_json_value $profile $contract_name $deployed_address $deployment_cache_file
 
 else
 	# In the case of world, we have no init values to pass to the constructor
-	deployed_address=$(deploy_protostar $contract_name "")
+	deploy_protostar $contract_name ""
 	update_json_value $profile $contract_name $deployed_address $deployment_cache_file
 
 fi
