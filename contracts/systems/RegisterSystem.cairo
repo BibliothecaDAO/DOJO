@@ -140,7 +140,7 @@ namespace RegisterSystem {
 
         if (entity == FALSE) {
             // register
-            register(ecs_address, guid, 0);
+            register(ecs_address, guid, 1);
             return ();
         }
 
