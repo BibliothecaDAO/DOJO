@@ -10,4 +10,7 @@ namespace IWorld {
     }
     func register(address: felt, guid: felt, ecs_type: felt) {
     }
+
+    func execute(system_guid: felt, entity: felt, data_len: felt, data: felt*) {
+    }
 }
