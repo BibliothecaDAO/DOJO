@@ -101,10 +101,10 @@ func test__world_should_execute_system{
     test__world_should_register_component();
     %{
         expect_events({"name": "ComponentValueSet", "data": 
-           [2, // entity guid
-           ids.location_id, // component id
-           4, // data len
-           0, // data
+           [2, # entity guid
+           ids.location_id, # component id
+           4, # data len
+           0, # data
            0,
            0,
            1]})
